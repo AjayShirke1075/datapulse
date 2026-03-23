@@ -39,23 +39,23 @@
 
 <div align="center">
 
-### 🏠 Hero & Dashboard Overview
-![DataPulse Hero](screenshots/hero.png)
+### 🏠 Full Dashboard — Hero + KPIs + Ticker
+![DataPulse Full Dashboard](screenshots/hero.png)
 
 <br/>
 
-### 📈 Market Analysis · Price Chart + MA(20) + Portfolio
-![Market Analysis](screenshots/markets.png)
+### 📈 Market Analysis — Price Chart · MA(20) · Portfolio Holdings
+![Market Analysis AAPL](screenshots/aapl_chart.png)
 
 <br/>
 
-### ⚙️ Algorithm Visualizer · QuickSort in Action
-![QuickSort Visualizer](screenshots/algorithms.png)
+### 📊 Market Deep Dive — NVDA · 90-Day Price + Portfolio Metrics
+![Market Analysis NVDA](screenshots/nvda_chart.png)
 
 <br/>
 
-### 🔍 Anomaly Detection · Statistical Outliers
-![Anomaly Detection](screenshots/anomalies.png)
+### ⚙️ QuickSort Visualizer — Live Algorithm Animation
+![QuickSort Visualizer](screenshots/sort.png)
 
 </div>
 
@@ -69,7 +69,7 @@
 
 ### 📊 Financial Analytics
 - **Geometric Brownian Motion** — same stochastic model used in Black-Scholes options pricing
-- **RSI (14-period)** — Relative Strength Index built from scratch with real Wilder smoothing
+- **RSI (14-period)** — Relative Strength Index with real Wilder smoothing
 - **Moving Average MA(20)** — O(n) sliding window implementation
 - **90-day OHLCV** simulation for AAPL, TSLA, NVDA, MSFT, AMZN
 
@@ -77,10 +77,10 @@
 <td width="50%">
 
 ### 🧮 Algorithms & Data Structures
-- **QuickSort Visualizer** — animated step-by-step with pivot highlighting
+- **QuickSort Visualizer** — animated step-by-step with pivot highlighting (gold) and comparison (cyan)
 - **Portfolio Analytics** — Sharpe Ratio, HHI Diversification Score
 - **Z-Score Anomaly Detection** — σ > 2.5 threshold outlier scanning
-- **REST API** — 4 clean JSON endpoints powering the frontend
+- **REST API** — 4 clean JSON endpoints powering the entire frontend
 
 </td>
 </tr>
@@ -88,21 +88,23 @@
 <td>
 
 ### 💎 Premium UI/UX
-- Obsidian-gold dark theme with ambient orb lighting
-- Glassmorphic sticky header with live clock
-- Smooth skeleton loading states
-- Interactive stock tabs & animated count-up KPIs
-- Infinite scroll stock ticker bar
+- Obsidian-gold dark theme with triple ambient orb lighting
+- Glassmorphic sticky header with live timestamp
+- Shimmer skeleton loading states
+- Animated KPI count-up on load
+- Infinite scroll stock ticker bar with fade edges
+- Error boundary with friendly UI fallback
 
 </td>
 <td>
 
 ### 🏗️ Architecture
-- Zero external data science libraries (pure Python stdlib)
+- **Zero** external data science libraries (pure Python stdlib)
 - Flask REST API with 4 endpoints
 - Vanilla JS + Chart.js 4 frontend
-- Responsive design (mobile → 4K)
-- Error boundary with friendly UI fallback
+- RSI overbought/oversold lines drawn via Chart.js `afterDraw`
+- Responsive: mobile → ultrawide 4K
+- Git-tracked screenshots folder
 
 </td>
 </tr>
@@ -110,28 +112,29 @@
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Project Structure
 
 ```
-DataPulse/
-├── 📄 app.py                  ← Flask server + all algorithm implementations
-│   ├── DataEngine             ← Core processing class
-│   │   ├── generate_stock_data()     → Geometric Brownian Motion (GBM)
-│   │   ├── compute_moving_average()  → O(n) sliding window MA
-│   │   ├── compute_rsi()             → 14-period RSI (Wilder smoothing)
-│   │   ├── quick_sort_trace()        → QuickSort with step capture
-│   │   ├── portfolio_analysis()      → Sharpe Ratio + HHI diversification
-│   │   └── anomaly_detection()       → Z-score outlier detection
-│   └── Routes: /  /api/stocks  /api/portfolio  /api/sort-viz  /api/metrics
+datapulse/
+├── 📄 app.py                        ← Flask server + all algorithm implementations
+│   └── class DataEngine
+│       ├── generate_stock_data()    → Geometric Brownian Motion
+│       ├── compute_moving_average() → O(n) sliding window MA-20
+│       ├── compute_rsi()            → 14-period RSI (Wilder smoothing)
+│       ├── quick_sort_trace()       → QuickSort with full step capture
+│       ├── portfolio_analysis()     → Sharpe Ratio + HHI diversification
+│       └── anomaly_detection()      → Z-score (threshold: 2.5σ)
 │
 ├── 📁 templates/
-│   └── index.html             ← Full-stack frontend (HTML + CSS + JS)
-│       ├── Inter + JetBrains Mono fonts
-│       ├── Obsidian-Gold CSS design system
-│       └── Chart.js 4.4 visualizations
+│   └── index.html                   ← Full-stack frontend (HTML + CSS + JS)
 │
-├── 📁 screenshots/            ← Dashboard preview images
-├── 📄 requirements.txt        ← flask>=3.0.0
+├── 📁 screenshots/                  ← Dashboard preview images (committed to repo)
+│   ├── hero.png                     → Full dashboard overview
+│   ├── aapl_chart.png               → AAPL market analysis
+│   ├── nvda_chart.png               → NVDA market analysis
+│   └── sort.png                     → QuickSort visualizer
+│
+├── 📄 requirements.txt              ← flask>=3.0.0
 └── 📄 README.md
 ```
 
@@ -139,30 +142,30 @@ DataPulse/
 
 ## 🧠 Algorithms Implemented
 
-| Algorithm | Complexity | Implementation | Use Case |
+| Algorithm | Time Complexity | Method | Use Case |
 |---|---|---|---|
 | **Geometric Brownian Motion** | O(n) | `generate_stock_data()` | Realistic stock price simulation |
 | **Moving Average (MA-20)** | O(n) sliding window | `compute_moving_average()` | Trend smoothing |
-| **RSI (Wilder's)** | O(n) | `compute_rsi()` | Overbought/oversold signals |
-| **QuickSort** | O(n log n) avg, O(n²) worst | `quick_sort_trace()` | Sorting + visualization |
-| **Sharpe Ratio** | O(n) | `portfolio_analysis()` | Risk-adjusted return |
-| **HHI Diversification** | O(n) | `portfolio_analysis()` | Portfolio concentration |
-| **Z-Score Anomaly** | O(n) | `anomaly_detection()` | Statistical outlier detection |
+| **RSI — Wilder's Method** | O(n) | `compute_rsi()` | Overbought / oversold signals |
+| **QuickSort** | O(n log n) avg · O(n²) worst | `quick_sort_trace()` | Sorting + live visualization |
+| **Sharpe Ratio** | O(n) | `portfolio_analysis()` | Risk-adjusted return metric |
+| **HHI Diversification Index** | O(n) | `portfolio_analysis()` | Portfolio concentration score |
+| **Z-Score Anomaly Detection** | O(n) | `anomaly_detection()` | Statistical outlier detection |
 
 ---
 
 ## 📡 API Reference
 
-| Endpoint | Method | Response |
+| Endpoint | Method | Description |
 |---|---|---|
-| `GET /` | — | Renders the dashboard HTML |
+| `GET /` | — | Renders the dashboard HTML page |
 | `GET /api/stocks` | JSON | 5 symbols × 90-day OHLCV + MA20 + RSI + anomaly indices |
-| `GET /api/portfolio` | JSON | 7 holdings with Sharpe Ratio, HHI score, volatility |
-| `GET /api/sort-viz?size=N` | JSON | QuickSort step-by-step trace (max 200 steps) |
-| `GET /api/metrics` | JSON | KPI dashboard data (uptime, API calls, data points) |
+| `GET /api/portfolio` | JSON | 7 holdings with Sharpe Ratio, HHI, volatility |
+| `GET /api/sort-viz?size=N` | JSON | QuickSort step-by-step trace (capped at 200 steps) |
+| `GET /api/metrics` | JSON | Dashboard KPI data (uptime, API calls, data points) |
 
 <details>
-<summary>📋 Sample API Response — <code>GET /api/stocks</code></summary>
+<summary>📋 Sample — <code>GET /api/stocks</code></summary>
 
 ```json
 {
@@ -171,12 +174,11 @@ DataPulse/
     "change_90d": 21.56,
     "high": 287.18,
     "low": 169.49,
-    "ma20": [null, null, ..., 198.42, 199.31],
-    "rsi": [null, ..., 58.3, 61.7],
+    "ma20": [null, null, "...", 198.42, 199.31],
+    "rsi":  [null, "...", 58.3, 61.7],
     "anomalies": [4, 17, 31],
     "prices": [
-      { "date": "2025-12-23", "price": 169.49, "volume": 1024332, "day": 0 },
-      ...
+      { "date": "2025-12-23", "price": 169.49, "volume": 1024332, "day": 0 }
     ]
   }
 }
@@ -185,13 +187,13 @@ DataPulse/
 </details>
 
 <details>
-<summary>📋 Sample API Response — <code>GET /api/portfolio</code></summary>
+<summary>📋 Sample — <code>GET /api/portfolio</code></summary>
 
 ```json
 {
   "holdings": [
     { "symbol": "AAPL", "value": 33800.50, "return_pct": -13.5, "shares": 164 },
-    { "symbol": "NVDA", "value": 39500.00, "return_pct": 38.5, "shares": 100 }
+    { "symbol": "NVDA", "value": 39500.00, "return_pct": 38.5,  "shares": 100 }
   ],
   "analysis": {
     "total_value": 191000.00,
@@ -217,62 +219,54 @@ cd datapulse
 
 # 2. (Optional) Create a virtual environment
 python -m venv venv
-source venv/bin/activate    # On Windows: venv\Scripts\activate
+source venv/bin/activate     # Windows: venv\Scripts\activate
 
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the server
+# 4. Run the development server
 python app.py
 
-# 5. Open in browser
-# → http://localhost:5000
+# 5. Open in your browser
+#    → http://localhost:5000
 ```
 
-> **Requirements**: Python 3.11+ · Flask 3.0+
+> **Requirements:** Python 3.11+ · Flask 3.0+
 
 ---
 
-## 🧩 How It Works
+## 🧩 How The Algorithms Work
 
 ### Geometric Brownian Motion (GBM)
-
-Stock prices are simulated using the **same stochastic differential equation** that underpins the Black-Scholes options pricing model:
-
+Uses the same stochastic differential equation that underpins Black-Scholes options pricing:
 ```
 dS = μS dt + σS dW
 ```
-
-Discretized as:
-
+Discretized form implemented in Python:
 ```python
 price *= math.exp((mu - 0.5 * sigma**2) * dt + sigma * math.sqrt(dt) * z)
-# where z ~ N(0,1)  |  mu = 0.0003 (drift)  |  sigma = 0.018 (volatility)
+# z ~ N(0,1)  |  mu = 0.0003 (drift)  |  sigma = 0.018 (volatility)
 ```
 
-### RSI — Wilder's Smoothing Method
-
+### RSI — Wilder's Smoothing
 ```python
 avg_gain = (avg_gain * (period - 1) + gains[i]) / period
 avg_loss = (avg_loss * (period - 1) + losses[i]) / period
-rs = avg_gain / avg_loss
-rsi = 100 - (100 / (1 + rs))
+rsi = 100 - (100 / (1 + avg_gain / avg_loss))
+# > 70 = Overbought  |  < 30 = Oversold
 ```
-→ Values **above 70** = overbought · Values **below 30** = oversold
 
 ### Sharpe Ratio + HHI Diversification
-
 ```python
-sharpe = (weighted_return - risk_free_rate) / portfolio_volatility  # risk_free = 2%
-hhi    = sum(weight**2 for weight in portfolio_weights)             # Herfindahl-Hirschman Index
-diversification_score = (1 - hhi) * 100                            # Higher = more diversified
+sharpe = (weighted_return - 2.0) / portfolio_volatility      # risk-free rate = 2%
+hhi    = sum(weight**2 for weight in portfolio_weights)       # Herfindahl-Hirschman Index
+diversification = (1 - hhi) * 100                            # Higher = more diversified
 ```
 
 ### Z-Score Anomaly Detection
-
 ```python
-z = abs((value - mean) / std_dev)
-if z > 2.5:   # 2.5 standard deviations from mean
+z_score = abs((value - mean) / std_dev)
+if z_score > 2.5:    # 2.5 standard deviations = ~1.2% of data flagged
     anomalies.append(index)
 ```
 
@@ -282,15 +276,15 @@ if z > 2.5:   # 2.5 standard deviations from mean
 
 <div align="center">
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Backend** | Python 3.11 | Core algorithms & data engine |
-| **Server** | Flask 3.0 | REST API & template rendering |
-| **Frontend** | Vanilla JS (ES2022) | DOM manipulation & state management |
-| **Charts** | Chart.js 4.4 | Financial chart visualizations |
-| **Fonts** | Inter + JetBrains Mono | Premium typography system |
-| **Design** | Pure CSS (custom design tokens) | Obsidian-Gold dark theme |
-| **Math** | Python `statistics`, `math`, `random` | All stdlib — zero ML dependencies |
+| Layer | Technology | Version | Purpose |
+|---|---|---|---|
+| **Backend** | Python | 3.11+ | Core algorithm engine |
+| **Web Server** | Flask | 3.0 | REST API + HTML rendering |
+| **Frontend JS** | Vanilla ES2022 | — | DOM, state, fetch |
+| **Charts** | Chart.js | 4.4 | Financial visualization |
+| **Fonts** | Inter + JetBrains Mono | — | Premium typography |
+| **Styling** | Pure CSS (design tokens) | — | Obsidian-Gold dark theme |
+| **Data/Math** | Python stdlib | — | statistics, math, random |
 
 </div>
 
@@ -298,25 +292,26 @@ if z > 2.5:   # 2.5 standard deviations from mean
 
 ## 💡 Resume Highlights
 
-> This project demonstrates production-grade Python skills with zero data-science shortcuts.
+> This project proves production-level Python skills with **zero data-science shortcuts**.
 
-- ✅ Implemented **7 algorithms from scratch** — no NumPy, Pandas, or SciPy
-- ✅ Built a **full-stack REST API** with proper JSON response design
-- ✅ Applied **real financial models** — GBM used in Black-Scholes, Wilder RSI, Sharpe Ratio
-- ✅ Engineered **algorithm visualization** with step-capture pattern
-- ✅ Designed a **premium dark-theme UI** with CSS design tokens, animations, and glassmorphism
+- ✅ Implemented **7 algorithms from scratch** — no NumPy, Pandas, or SciPy at all
+- ✅ Built a **full-stack REST API** with proper JSON contract design (4 endpoints)
+- ✅ Applied **real financial models** — GBM (Black-Scholes adjacent), Wilder RSI, Sharpe Ratio
+- ✅ Engineered **step-capture algorithm visualization** (QuickSort with pivot tracing)
+- ✅ Designed a **production-grade dark UI** with CSS design tokens, animations, glassmorphism
 - ✅ Demonstrated **time/space complexity** awareness (O(n) sliding window vs. naive O(n²))
+- ✅ Implemented **error boundaries** with graceful UI fallback for API failures
 
 ---
 
 ## 🗺️ Roadmap
 
 - [ ] WebSocket live price streaming
-- [ ] MACD indicator (Moving Average Convergence Divergence)
-- [ ] Bollinger Bands
-- [ ] Multiple sort algorithm visualizations (MergeSort, HeapSort)
-- [ ] Machine learning price prediction (LSTM)
-- [ ] Export portfolio report as PDF
+- [ ] MACD (Moving Average Convergence Divergence)
+- [ ] Bollinger Bands overlay on price chart
+- [ ] Multiple sort algorithms (MergeSort, HeapSort, BubbleSort)
+- [ ] LSTM neural network price prediction
+- [ ] Download portfolio report as PDF
 
 ---
 
@@ -324,17 +319,16 @@ if z > 2.5:   # 2.5 standard deviations from mean
 
 ```
 MIT License — free to use, modify, and distribute.
-See LICENSE for full details.
 ```
 
 ---
 
 <div align="center">
 
-**Built with ❤️ in pure Python**
+**Built with ❤️ in pure Python — no shortcuts taken**
 
 *DataPulse · 2026 · Python + Flask + Chart.js*
 
-⭐ **Star this repo** if you found it useful!
+⭐ **Star this repo** if you found it useful — it helps others discover it!
 
 </div>
