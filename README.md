@@ -98,4 +98,4 @@ DataPulse/
 
 ---
 
-*Built by [Your Name] · 2025*
+*Built by AjayShirke · 2025*
